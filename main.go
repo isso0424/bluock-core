@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"blumaton/bluock-core/config"
+	"blumaton/bluock-core/scanner"
+)
 
 func main() {
-	fmt.Println("Hello, world.")
+	c, err := config.LoadConfig("config/example.yml")
+	if err != nil {
+		panic(err)
+	}
+
+	err = scanner.ScanDevices(&c)
+	if err != nil {
+		panic(err)
+	}
 }
