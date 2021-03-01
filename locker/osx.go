@@ -1,11 +1,15 @@
 package locker
 
+import (
+	"os/exec"
+)
+
 
 type OSXLockerOperator struct {
 }
 
 
 func (op OSXLockerOperator) ExecuteLock() (err error) {
-	// TODO: Write process of lock on Linux
+	err = exec.Command("pmset", "displaysleepnow").Run()
 	return err
 }
