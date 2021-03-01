@@ -1,7 +1,7 @@
 package locker
 
 import (
-	"log"
+	"blumaton/bluock-core/utils"
 	"runtime"
 )
 
@@ -17,16 +17,10 @@ func Get() LockOperator {
 		case "darwin":
 			return OSXLockerOperator{}
 		case "windows":
-			unimplementedPanic()
+			utils.UnimplementedPanic()
 		default:
-			unimplementedPanic()
+			utils.UnimplementedPanic()
 	}
 
 	return nil
-}
-
-
-// Kill myself with arguing panic when this function is called
-func unimplementedPanic() {
-	log.Panicf("UnimplementedError: This software does not support your os '%s'", runtimeOS)
 }
