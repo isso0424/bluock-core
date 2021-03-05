@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"blumaton/bluock-core/config"
+	"blumaton/bluock-core/scanner/handler"
 	"log"
 	"os"
 	"os/signal"
@@ -17,7 +17,7 @@ func handleFinish(sc chan os.Signal) {
 	adapter.StopScan()
 }
 
-func ScanDevices(c *config.Config) (err error) {
+func ScanDevices(scanningHandler handler.BluetoothHandler) (err error) {
 	defer log.Println("Stop scanning")
 	err = adapter.Enable()
 	if err != nil {
@@ -25,17 +25,13 @@ func ScanDevices(c *config.Config) (err error) {
 	}
 
 	log.Println("Start device scanning")
-	log.Printf("Handling addresses: %v", c.MACAddresses)
-	log.Printf("RSSI threshold: %d", c.RSSIThreshold)
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGTERM, syscall.SIGINT, os.Interrupt)
 
 	go handleFinish(sc)
 
-	err = adapter.Scan(func (adapter *bluetooth.Adapter, device bluetooth.ScanResult) {
-		// TODO: Create handler and use here.
-	})
+	err = adapter.Scan(scanningHandler.OnDetected)
 
 	return
 }
