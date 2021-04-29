@@ -1,4 +1,4 @@
-package configurator
+package inputter
 
 import (
 	"blumaton/bluock-core/configurator/inputter/mac_address"
@@ -9,7 +9,7 @@ import (
 
 func inputText() (string, error) {
 	var address string
-	_, err := fmt.Scan(address)
+	_, err := fmt.Scan(&address)
 	if err != nil {
 		return "", err
 	}
