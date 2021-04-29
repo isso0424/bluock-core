@@ -2,6 +2,7 @@ package main
 
 import (
 	"blumaton/bluock-core/config"
+	"blumaton/bluock-core/configurator"
 	"blumaton/bluock-core/scanner"
 	"blumaton/bluock-core/scanner/handler"
 	"blumaton/bluock-core/utils"
@@ -13,6 +14,7 @@ const (
 	runtimeOS  = runtime.GOOS
 	production = iota
 	connectionTest
+	configurate
 )
 
 type mode int
@@ -24,10 +26,15 @@ type options struct {
 func parseArgs() options {
 	args := options{mode: production}
 	isConnectionTest := flag.Bool("connection-test", false, "Start bluetooth connection test")
+	isConfigurate := flag.Bool("configurate", false, "")
 
 	flag.Parse()
 	if *isConnectionTest {
 		args.mode = connectionTest
+	}
+
+	if *isConfigurate {
+		args.mode = configurate
 	}
 
 	return args
@@ -49,6 +56,13 @@ func main() {
 			panic(err)
 		}
 		scanningHandler = handler.New(&c)
+	case configurate:
+		err := configurator.UpdateConfig()
+		if err != nil {
+			panic(err)
+		}
+
+		return
 	}
 
 	err := scanner.ScanDevices(scanningHandler)
